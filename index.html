@@ -997,7 +997,7 @@ const gridShaderSource = `
     float t = time * 0.5;
 
     // Increase the scaling factor to 50.0 to increase dot density
-    vec2 gridUV = uv * 50.0;
+    vec2 gridUV = uv * 5.0;
 
     // Get fractional part to create a repeating pattern
     vec2 cell = fract(gridUV) - 0.5;
