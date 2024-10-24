@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A sausage and ball appreciation site - this shows up in search results">
+    <meta name="keywords" content="Sausages, Dachshund, Balls">
+    <meta name="author" content="Frankie">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" href="media/sausage.png">
+    <link rel="stylesheet" href="main.css">
+    <title>Frankie the Long Haired Mini-Dachshund</title>
+
+</head>
+<body>
+    <div class="navbar">
+        <div><a href="#">Home</a></div>
+        <div><a href="#">About</a></div>
+        <div><a href="#">Contact</a></div>
+        <div><a href="http://www.longboyscout.com">Scout's page</a></div>
+    </div>
+
+    <h1>Welcome to Frankie's Super Sausage Server</h1>
+    <h2>This site is intended to illustrate some of the basic HTML tags that you an use to build a front page to your CI/CD pipeline. For example, this passage uses a 'h2' tag, although heading tags by default will appear different sizes, the number (h1 - h6) should refer to importance.</h2>
+    <hr/>
+    <p id="hrtag"> I've used a 'hr' tag above to create a horizontal line, used to break up content. However, this text is within 'p' tags, for paragraph. 
+        
+    We don't have numbered paragraphs like headings, but we will learn how to individually identify our different p's in order to apply styles to them.</p>
+
+    <p>Originally all of our style info was applied through html tags, so we can use <b>bold</b> and <i>italics</i> with just 'b' and 'i' tags, also change the appearance of your text with <sub>subscript</sub> or <sup>superscript</sup> using 'sub' and 'sup' tags respectively</p>
+
+    <p>It looks like this:</p>
+    <img src="media/htmlpexample.JPG" alt="A sample of html code" width="600px">
+    <br>
+    <a href="https://en.wikipedia.org/wiki/Dachshund">Another very common tag is 'a', which requires a 'href' attribute to provide the target URL, and is used to create links like this one.</a>
+    <br>
+    <a href="https://en.wikipedia.org/wiki/Dachshund" target="blank">This one opens in a new tab.</a>
+    
+    <p>We can use many other html tags to structure our content; Use 'ul' to create an <i>unordered list</i> i.e. bulllet points, or 'ol' for an ordered list.</p>
+    <div style="font-size: small;">
+        <h3>Frankie's favourite foods:</h3>
+        <ul>
+            <li>Sausages</li>
+            <li>Steak</li>
+            <li>Chicken</li>
+            <li>Ice Cream</li>
+        </ul>
+        <h3>Frankie's favourite toys:</h3>
+        <ol>
+            <li>Ball</li>
+            <li>Ball</li>
+            <li>Ball</li>
+        </ol>
+    </div>
+    <p>Here's the code:</p>
+    <img src="/media/lists.JPG" alt="html for lists" width="200">
+    <p>It is also common to use html tables to lay out the elements of your page, in this example some images added with the 'img' tag, which also requires a 'src' and 'alt' parameters. <b>However</b>, this is not the best option for images, we'll see further down a better way.</p>
+    
+    <table class="frankietab">
+        <tr>
+            <td><img src="media/mates.jpg" alt="Frankie playing" width="250px"></td>
+            <td><img src="media/pickmeup.jpg" alt="Frankie wanting to be picked up" width="250px"></td>
+            <td><img src="media/icecream.jpg" alt="Frankie eating ice cream" height="250px"></td>
+        </tr>
+    </table>
+    
+    <video class="frankievid" width="480" height="640" controls>
+        <source src="media/wiggle.mp4" type="video/mp4">
+    </video>
+
+    <div>
+        <p>The last html tag you should know is 'div', this is doesn't show anything in the browser, but it is used to break your document into sections which can be handled or styled differently. The below CSS section is contained within 'div' tags, so I can manipulate it individually with style rules</p>
+    </div>
+
+    <p>To begin changing the look of the website with CSS we can add 'style' attributes directly to the html tags, known as <b>Inline</b> CSS; You can add your style to the head section of the html doc, known as <b>Internal</b> CSS; Or you can create a separate CSS file, known as <b>External</b> CSS. There are many style attributes which can be defined, including: color, background-color, alignment, font, borders, and many more... </p>
+    <p>When using Internal or External CSS instead of adding our style rules as attributes to our html tags, we instead right CSS rules which have their own syntax. There is a selector followed by declarations as Key Value Pairs in curley braces for example:</p> 
+    <br> 
+    <p>h1 {color:green; font-size:16px;}</p>
+    <br>
+    <p>When added between the head tags it looks like this:</p>
+    <img src="media/internalcss.JPG" alt="an exmaple of an internal style rule" width="300">
+   
+
+    <p class="rules">You might have spotted a problem with the CSS rules. What if we wanted to apply rules to individual elements, rather than all h1 elements, or all divs. To do this we assign a CSS class to our html tags, and then refer to those tags in our CSS rules declared in the head block. These images below show the div tags with classes, the CSS rules with class selectors, and the different output in the browser:</p>
+    
+    <div class="codepics">
+        <div><img src="media/cssclasses.JPG" alt="div tags with classes" width="300"></div>
+        <div><img src="media/cssclassrules.JPG" alt="css class selectors" width="300"></div>
+        <div><img src="media/cssclassbrowser.JPG" alt="the browser outputs" width="300"></div>
+    </div>
+    
+    <hr>
+    <br>
+    
+    <form id="orderForm" method="get" action="https://k6rohiot03.execute-api.eu-west-2.amazonaws.com/replaceFN">
+        <input type="text" name="first_name" placeholder="First Name">
+        <input type="text" name="last_name" placeholder="Last Name">
+        <input type="number" name="order_qty" placeholder="Order Quantity">
+        <button type="submit">Submit Order</button>
+    </form>
+
+</body>
+</html>
