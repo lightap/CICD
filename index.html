@@ -455,6 +455,95 @@
     transition: opacity 0.3s ease;
 }
 
+  .s3-metrics {
+    padding: 15px 0;
+  }
+  
+  .metric-card {
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .metric-title {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-bottom: 10px;
+  }
+  
+  .metric-chart {
+    width: 100%;
+    height: 60px;
+    margin: 10px 0;
+  }
+  
+  .metric-value {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .recent-activity {
+    margin: 20px 0;
+  }
+  
+  .recent-activity h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    opacity: 0.9;
+  }
+  
+  .activity-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .activity-icon {
+    background: rgba(255,255,255,0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  
+  .activity-text {
+    flex-grow: 1;
+    font-size: 14px;
+  }
+  
+  .activity-time {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+  
+  .bucket-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 15px;
+  }
+  
+  .stat-item {
+    flex: 1;
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .stat-label {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 5px;
+  }
+  
+  .stat-value {
+    font-size: 18px;
+    font-weight: bold;
+  }
+ 
   </style>
 </head>
 <body>
@@ -641,24 +730,82 @@
           <h2>AWS Services</h2>
           <p>Amazon Web Services (AWS) provides a broad set of products and services you can use as building blocks for your applications.</p>
           <p>Popular Services:</p>
-          <p>• EC2 for compute<br>
-          • S3 for storage<br>
-          • RDS for databases<br>
-          • Lambda for serverless<br>
-          • CloudFront for content delivery</p>
+          <p>&bull; EC2 for compute<br>
+             &bull; S3 for storage<br>
+             &bull; RDS for databases<br>
+             &bull; Lambda for serverless<br>
+             &bull; CloudFront for content delivery</p>
         </div>
         <div class="block">
           <h2>Cloud Benefits</h2>
           <p>AWS Cloud provides numerous advantages for organizations of all sizes.</p>
           <p>Key Benefits:</p>
-          <p>• Pay-as-you-go pricing<br>
-          • Global infrastructure<br>
-          • Scalability and flexibility<br>
-          • Security and compliance<br>
-          • Wide service integration</p>
+          <p>&bull; Pay-as-you-go pricing<br>
+             &bull; Global infrastructure<br>
+             &bull; Scalability and flexibility<br>
+             &bull; Security and compliance<br>
+             &bull; Wide service integration</p>
         </div>
       </div>
-    </div>
+        <div class="block">
+          <h2>S3 Bucket Metrics</h2>
+          <div class="s3-metrics">
+            <div class="metric-card">
+              <div class="metric-title">Storage Usage</div>
+              <div class="metric-chart">
+                <svg viewBox="0 0 100 60">
+                  <path d="M10,50 L20,45 L30,48 L40,42 L50,38 L60,35 L70,30 L80,28 L90,25" 
+                        fill="none" 
+                        stroke="rgba(255,255,255,0.8)" 
+                        stroke-width="2"/>
+                  <path d="M10,50 L90,50" 
+                        stroke="rgba(255,255,255,0.2)" 
+                        stroke-width="1" 
+                        stroke-dasharray="2,2"/>
+                </svg>
+              </div>
+              <div class="metric-value">2.8 GB Used</div>
+            </div>
+            
+            <div class="recent-activity">
+              <h3>Recent Activity</h3>
+              <div class="activity-item">
+                <span class="activity-icon">↑</span>
+                <span class="activity-text">index.html uploaded</span>
+                <span class="activity-time">2m ago</span>
+              </div>
+              <div class="activity-item">
+                <span class="activity-icon">↓</span>
+                <span class="activity-text">styles.css downloaded</span>
+                <span class="activity-time">5m ago</span>
+              </div>
+              <div class="activity-item">
+                <span class="activity-icon">⟳</span>
+                <span class="activity-text">Bucket policy updated</span>
+                <span class="activity-time">15m ago</span>
+              </div>
+            </div>
+    
+            <div class="bucket-stats">
+              <div class="stat-item">
+                <div class="stat-label">Files</div>
+                <div class="stat-value">142</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Requests/hr</div>
+                <div class="stat-value">1.2k</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Availability</div>
+                <div class="stat-value">99.9%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    
+  
 
     <div id="development" class="content-section">
       <div class="content-blocks">
