@@ -406,6 +406,55 @@
       color: white;
   }
 
+  .dot-graph-container {
+    padding: 20px 0;
+}
+
+.dot-graph {
+    width: 100%;
+    height: auto;
+}
+
+.dot {
+    fill: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.dot:hover {
+    fill: rgba(255, 255, 255, 0.8);
+    r: 6;
+}
+
+.line {
+    stroke: rgba(255, 255, 255, 0.4);
+    stroke-width: 2;
+}
+
+.graph-label {
+    fill: white;
+    font-size: 12px;
+    text-anchor: middle;
+}
+
+.axis-label {
+    fill: white;
+    font-size: 10px;
+    opacity: 0.7;
+}
+
+.tooltip {
+    position: absolute;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
   </style>
 </head>
 <body>
@@ -543,7 +592,47 @@
           • Sprint Retrospective<br>
           • Product Backlog</p>
         </div>
+        
       </div>
+      <div class="block">
+        <h2>Sprint Velocity Trend</h2>
+        <p>Team performance across recent sprints:</p>
+        <div class="dot-graph-container">
+            <svg class="dot-graph" viewBox="0 0 400 200">
+                <!-- Y-axis labels -->
+                <text x="30" y="180" class="axis-label">0</text>
+                <text x="30" y="140" class="axis-label">20</text>
+                <text x="30" y="100" class="axis-label">40</text>
+                <text x="30" y="60" class="axis-label">60</text>
+                <text x="30" y="20" class="axis-label">80</text>
+                
+                <!-- X-axis labels -->
+                <text x="50" y="195" class="axis-label">Sprint 1</text>
+                <text x="120" y="195" class="axis-label">Sprint 2</text>
+                <text x="190" y="195" class="axis-label">Sprint 3</text>
+                <text x="260" y="195" class="axis-label">Sprint 4</text>
+                <text x="330" y="195" class="axis-label">Sprint 5</text>
+                
+                <!-- Grid lines (subtle) -->
+                <line x1="40" y1="20" x2="380" y2="20" stroke="rgba(255,255,255,0.1)" />
+                <line x1="40" y1="60" x2="380" y2="60" stroke="rgba(255,255,255,0.1)" />
+                <line x1="40" y1="100" x2="380" y2="100" stroke="rgba(255,255,255,0.1)" />
+                <line x1="40" y1="140" x2="380" y2="140" stroke="rgba(255,255,255,0.1)" />
+                <line x1="40" y1="180" x2="380" y2="180" stroke="rgba(255,255,255,0.1)" />
+                
+                <!-- Connecting lines -->
+                <path class="line" d="M50,160 L120,120 L190,80 L260,100 L330,60" fill="none"/>
+                
+                <!-- Dots -->
+                <circle class="dot" cx="50" cy="160" r="4" onmouseover="showTooltip(event, 'Sprint 1: 15 points')" onmouseout="hideTooltip()"/>
+                <circle class="dot" cx="120" cy="120" r="4" onmouseover="showTooltip(event, 'Sprint 2: 35 points')" onmouseout="hideTooltip()"/>
+                <circle class="dot" cx="190" cy="80" r="4" onmouseover="showTooltip(event, 'Sprint 3: 55 points')" onmouseout="hideTooltip()"/>
+                <circle class="dot" cx="260" cy="100" r="4" onmouseover="showTooltip(event, 'Sprint 4: 45 points')" onmouseout="hideTooltip()"/>
+                <circle class="dot" cx="330" cy="60" r="4" onmouseover="showTooltip(event, 'Sprint 5: 65 points')" onmouseout="hideTooltip()"/>
+            </svg>
+        </div>
+        <div class="tooltip"></div>
+    </div>
     </div>
 
     <div id="aws" class="content-section">
@@ -772,6 +861,19 @@
       requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
+
+    function showTooltip(event, text) {
+      const tooltip = document.querySelector('.tooltip');
+      tooltip.style.left = (event.pageX + 10) + 'px';
+      tooltip.style.top = (event.pageY - 20) + 'px';
+      tooltip.textContent = text;
+      tooltip.style.opacity = 1;
+  }
+  
+  function hideTooltip() {
+      const tooltip = document.querySelector('.tooltip');
+      tooltip.style.opacity = 0;
+  }
   </script>
 
   <div class="navbar">
