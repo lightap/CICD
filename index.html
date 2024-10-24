@@ -996,8 +996,8 @@ const gridShaderSource = `
     vec2 uv = gl_FragCoord.xy / resolution.xy;
     float t = time * 0.5;
 
-    // Scale UV coordinates to control dot density
-    vec2 gridUV = uv * 10.0;
+    // Increase the scaling factor to 50.0 to increase dot density
+    vec2 gridUV = uv * 50.0;
 
     // Get fractional part to create a repeating pattern
     vec2 cell = fract(gridUV) - 0.5;
@@ -1005,7 +1005,7 @@ const gridShaderSource = `
     // Calculate distance from the center of each cell
     float dist = length(cell);
 
-    // Create polka dots using smoothstep for solid edges
+    // Keep the smoothstep parameters the same to maintain dot size
     float dot = 1.0 - smoothstep(0.48, 0.5, dist);
 
     // Generate rainbow colors based on time and position
@@ -1019,12 +1019,14 @@ const gridShaderSource = `
     color = clamp(color, 0.0, 1.0);
 
     // Apply the dot pattern to the colors
-    vec3 backgroundColor = vec3(1.0); // White background
+    vec3 backgroundColor = vec3(0.0); // Changed to black background
     vec3 finalColor = mix(backgroundColor, color, dot);
 
     gl_FragColor = vec4(finalColor, 1.0);
   }
 `;
+
+
 
 
 function createShader(gl, type, source) {
