@@ -362,6 +362,50 @@
         font-size: 14px;
     }
 
+    .pie-chart-container {
+      width: 100%;
+      max-width: 300px;
+      margin: 20px auto;
+  }
+  
+  .pie-chart {
+      width: 100%;
+      height: auto;
+  }
+  
+  .pie-slice {
+      transition: all 0.3s ease;
+  }
+  
+  .pie-slice:hover {
+      transform: translateX(10px);
+  }
+  
+  .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: center;
+  }
+  
+  .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+  }
+  
+  .legend-color {
+      width: 15px;
+      height: 15px;
+      border-radius: 3px;
+  }
+  
+  .legend-text {
+      font-size: 14px;
+      color: white;
+  }
+
   </style>
 </head>
 <body>
@@ -550,6 +594,55 @@
           • Continuous Learning</p>
         </div>
       </div>
+      <div class="block">
+        <h2>Development Focus Areas</h2>
+        <p>Distribution of development efforts across different areas:</p>
+        <div class="pie-chart-container">
+            <svg class="pie-chart" viewBox="0 0 100 100">
+                <!-- Frontend - 30% -->
+                <path class="pie-slice" d="M50,50 L97,50 A47,47 0 0,1 85,85 L50,50" 
+                      fill="rgba(255,255,255,0.8)" />
+                
+                <!-- Backend - 25% -->
+                <path class="pie-slice" d="M50,50 L85,85 A47,47 0 0,1 50,97 L50,50" 
+                      fill="rgba(255,255,255,0.6)" />
+                
+                <!-- DevOps - 20% -->
+                <path class="pie-slice" d="M50,50 L50,97 A47,47 0 0,1 15,85 L50,50" 
+                      fill="rgba(255,255,255,0.4)" />
+                
+                <!-- Testing - 15% -->
+                <path class="pie-slice" d="M50,50 L15,85 A47,47 0 0,1 3,50 L50,50" 
+                      fill="rgba(255,255,255,0.3)" />
+                
+                <!-- Documentation - 10% -->
+                <path class="pie-slice" d="M50,50 L3,50 A47,47 0 0,1 97,50 L50,50" 
+                      fill="rgba(255,255,255,0.2)" />
+            </svg>
+        </div>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255,255,255,0.8)"></div>
+                <span class="legend-text">Frontend (30%)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255,255,255,0.6)"></div>
+                <span class="legend-text">Backend (25%)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255,255,255,0.4)"></div>
+                <span class="legend-text">DevOps (20%)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255,255,255,0.3)"></div>
+                <span class="legend-text">Testing (15%)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255,255,255,0.2)"></div>
+                <span class="legend-text">Documentation (10%)</span>
+            </div>
+        </div>
+    </div>
     </div>
   </div>
 
