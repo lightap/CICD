@@ -543,6 +543,17 @@
     font-size: 18px;
     font-weight: bold;
   }
+
+  .shader-switch {
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+  
+  .shader-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
  
   </style>
 </head>
@@ -580,7 +591,12 @@
       <button class="btn" onclick="showContent('agile')">Agile</button>
       <button class="btn" onclick="showContent('aws')">AWS</button>
       <button class="btn" onclick="showContent('development')">Development</button>
+      <div class="shader-switch">
+        <button class="btn shader-btn" onclick="toggleShader()">Switch Pattern</button>
+      </div>
     </div>
+
+    
 
 
     <div id="cicd" class="content-section active">
@@ -941,89 +957,143 @@
     }
 
     // Shader code remains the same as previous version
-    const canvas = document.getElementById('shader');
-    const gl = canvas.getContext('webgl');
+ // Replace the shader initialization and toggle code with this:
 
-    const vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vertexShader, `
-      attribute vec2 position;
-      void main() {
-        gl_Position = vec4(position, 0.0, 1.0);
-      }
-    `);
-    gl.compileShader(vertexShader);
 
-    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fragmentShader, `
-      precision mediump float;
-      uniform float time;
-      uniform vec2 resolution;
+ 
+const canvas = document.getElementById('shader');
+const gl = canvas.getContext('webgl');
 
-      void main() {
-        vec2 uv = gl_FragCoord.xy / resolution;
-        float t = time * 0.5;
-        
-        float r = sin(uv.x * 3.0 + t) * 0.5 + 0.5;
-        float g = cos(uv.y * 4.0 - t) * 0.5 + 0.5;
-        float b = sin((uv.x + uv.y) * 5.0 + t) * 0.5 + 0.5;
-        
-        gl_FragColor = vec4(r, g, b, 1.0);
-      }
-    `);
-    gl.compileShader(fragmentShader);
-
-    const program = gl.createProgram();
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-
-    const vertices = new Float32Array([
-      -1, -1,
-       1, -1,
-      -1,  1,
-       1,  1
-    ]);
-
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-
-    const position = gl.getAttribLocation(program, 'position');
-    gl.enableVertexAttribArray(position);
-    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-
-    const timeLocation = gl.getUniformLocation(program, 'time');
-    const resolutionLocation = gl.getUniformLocation(program, 'resolution');
-
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    function render(time) {
-      gl.useProgram(program);
-      gl.uniform1f(timeLocation, time * 0.001);
-      gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      requestAnimationFrame(render);
-    }
-    requestAnimationFrame(render);
-
-    function showTooltip(event, text) {
-      const tooltip = document.querySelector('.tooltip');
-      tooltip.style.left = (event.pageX + 10) + 'px';
-      tooltip.style.top = (event.pageY - 20) + 'px';
-      tooltip.textContent = text;
-      tooltip.style.opacity = 1;
+const vertexShaderSource = `
+  attribute vec2 position;
+  void main() {
+    gl_Position = vec4(position, 0.0, 1.0);
   }
+`;
+
+const waveShaderSource = `
+  precision mediump float;
+  uniform float time;
+  uniform vec2 resolution;
+
+  void main() {
+    vec2 uv = gl_FragCoord.xy / resolution;
+    float t = time * 0.5;
+    
+    float r = sin(uv.x * 3.0 + t) * 0.5 + 0.5;
+    float g = cos(uv.y * 4.0 - t) * 0.5 + 0.5;
+    float b = sin((uv.x + uv.y) * 5.0 + t) * 0.5 + 0.5;
+    
+    gl_FragColor = vec4(r, g, b, 1.0);
+  }
+`;
+
+const gridShaderSource = `
+  precision mediump float;
+  uniform float time;
+  uniform vec2 resolution;
+
+  void main() {
+    vec2 uv = gl_FragCoord.xy / resolution.xy;
+    float t = time * 0.5;
+    
+    vec2 grid = fract(uv * 10.0 + vec2(sin(t * 0.5) * 0.5, cos(t * 0.5) * 0.5));
+    float cell = smoothstep(0.1, 0.15, grid.x) * smoothstep(0.1, 0.15, grid.y);
+    
+    float r = sin(uv.x * 3.0 + t) * 0.5 + 0.5;
+    float g = cos(uv.y * 4.0 - t) * 0.5 + 0.5;
+    float b = sin((uv.x + uv.y) * 5.0 + t) * 0.5 + 0.5;
+    
+    vec3 color = vec3(r, g, b);
+    vec3 finalColor = mix(color, vec3(0.05), cell);
+    
+    gl_FragColor = vec4(finalColor, 1.0);
+  }
+`;
+
+function createShader(gl, type, source) {
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  return shader;
+}
+
+function createProgram(gl, vertexShader, fragmentShader) {
+  const program = gl.createProgram();
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+  return program;
+}
+
+const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+let currentFragmentShader = createShader(gl, gl.FRAGMENT_SHADER, waveShaderSource);
+let program = createProgram(gl, vertexShader, currentFragmentShader);
+
+const vertices = new Float32Array([
+  -1, -1,
+   1, -1,
+  -1,  1,
+   1,  1
+]);
+
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+let isWaveShader = true;
+let timeLocation = gl.getUniformLocation(program, 'time');
+let resolutionLocation = gl.getUniformLocation(program, 'resolution');
+
+function toggleShader() {
+  // Create new shader
+  const newFragmentShader = createShader(
+    gl,
+    gl.FRAGMENT_SHADER,
+    isWaveShader ? gridShaderSource : waveShaderSource
+  );
   
-  function hideTooltip() {
-      const tooltip = document.querySelector('.tooltip');
-      tooltip.style.opacity = 0;
-  }
+  // Create new program
+  const newProgram = createProgram(gl, vertexShader, newFragmentShader);
+  
+  // Clean up old program and shader
+  gl.deleteProgram(program);
+  gl.deleteShader(currentFragmentShader);
+  
+  // Update references
+  program = newProgram;
+  currentFragmentShader = newFragmentShader;
+  
+  // Get new uniform locations
+  timeLocation = gl.getUniformLocation(program, 'time');
+  resolutionLocation = gl.getUniformLocation(program, 'resolution');
+  
+  // Set up vertex attributes for new program
+  const positionLocation = gl.getAttribLocation(program, 'position');
+  gl.enableVertexAttribArray(positionLocation);
+  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+  
+  // Toggle shader flag
+  isWaveShader = !isWaveShader;
+}
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  gl.viewport(0, 0, canvas.width, canvas.height);
+}
+
+function render(time) {
+  gl.useProgram(program);
+  gl.uniform1f(timeLocation, time * 0.001);
+  gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  requestAnimationFrame(render);
+}
+
+window.addEventListener('resize', resize);
+resize();
+requestAnimationFrame(render);
   </script>
 
   <div class="navbar">
