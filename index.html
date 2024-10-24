@@ -960,8 +960,7 @@
  // Replace the shader initialization and toggle code with this:
 
 
- 
-const canvas = document.getElementById('shader');
+ const canvas = document.getElementById('shader');
 const gl = canvas.getContext('webgl');
 
 const vertexShaderSource = `
@@ -979,11 +978,11 @@ const waveShaderSource = `
   void main() {
     vec2 uv = gl_FragCoord.xy / resolution;
     float t = time * 0.5;
-    
+
     float r = sin(uv.x * 3.0 + t) * 0.5 + 0.5;
     float g = cos(uv.y * 4.0 - t) * 0.5 + 0.5;
     float b = sin((uv.x + uv.y) * 5.0 + t) * 0.5 + 0.5;
-    
+
     gl_FragColor = vec4(r, g, b, 1.0);
   }
 `;
@@ -996,20 +995,33 @@ const gridShaderSource = `
   void main() {
     vec2 uv = gl_FragCoord.xy / resolution.xy;
     float t = time * 0.5;
-    
-    vec2 grid = fract(uv * 10.0 + vec2(sin(t * 0.5) * 0.5, cos(t * 0.5) * 0.5));
-    float cell = smoothstep(0.1, 0.15, grid.x) * smoothstep(0.1, 0.15, grid.y);
-    
+
+    // Scale UV coordinates to control dot density
+    vec2 gridUV = uv * 10.0;
+
+    // Get fractional part to create a repeating pattern
+    vec2 cell = fract(gridUV) - 0.5;
+
+    // Calculate distance from the center of each cell
+    float dist = length(cell);
+
+    // Create polka dots using smoothstep for smooth edges
+    float dot = 1.0 - smoothstep(0.2, 0.25, dist);
+
+    // Generate animated colors
     float r = sin(uv.x * 3.0 + t) * 0.5 + 0.5;
     float g = cos(uv.y * 4.0 - t) * 0.5 + 0.5;
     float b = sin((uv.x + uv.y) * 5.0 + t) * 0.5 + 0.5;
-    
     vec3 color = vec3(r, g, b);
-    vec3 finalColor = mix(color, vec3(0.05), cell);
-    
+
+    // Mix the dot pattern with the background
+    vec3 backgroundColor = vec3(0.05);
+    vec3 finalColor = mix(backgroundColor, color, dot);
+
     gl_FragColor = vec4(finalColor, 1.0);
   }
 `;
+
 
 function createShader(gl, type, source) {
   const shader = gl.createShader(type);
@@ -1041,6 +1053,11 @@ const buffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
+// **Add these lines to set up the position attribute**
+const positionLocation = gl.getAttribLocation(program, 'position');
+gl.enableVertexAttribArray(positionLocation);
+gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
 let isWaveShader = true;
 let timeLocation = gl.getUniformLocation(program, 'time');
 let resolutionLocation = gl.getUniformLocation(program, 'resolution');
@@ -1052,27 +1069,27 @@ function toggleShader() {
     gl.FRAGMENT_SHADER,
     isWaveShader ? gridShaderSource : waveShaderSource
   );
-  
+
   // Create new program
   const newProgram = createProgram(gl, vertexShader, newFragmentShader);
-  
+
   // Clean up old program and shader
   gl.deleteProgram(program);
   gl.deleteShader(currentFragmentShader);
-  
+
   // Update references
   program = newProgram;
   currentFragmentShader = newFragmentShader;
-  
+
   // Get new uniform locations
   timeLocation = gl.getUniformLocation(program, 'time');
   resolutionLocation = gl.getUniformLocation(program, 'resolution');
-  
+
   // Set up vertex attributes for new program
   const positionLocation = gl.getAttribLocation(program, 'position');
   gl.enableVertexAttribArray(positionLocation);
   gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-  
+
   // Toggle shader flag
   isWaveShader = !isWaveShader;
 }
@@ -1094,6 +1111,7 @@ function render(time) {
 window.addEventListener('resize', resize);
 resize();
 requestAnimationFrame(render);
+
   </script>
 
   <div class="navbar">
