@@ -1014,7 +1014,7 @@ const gridShaderSource = `
     // Create polka dots using smoothstep for solid edges
     float dot = 1.0 - smoothstep(0.48, 0.5, dist);
 
-    // Generate rainbow colors based on time and position
+     // Generate rainbow colors based on time and position
     float hue = mod(t + floor(gridUV.x) * 0.2 + floor(gridUV.y) * 0.2, 1.0);
     vec3 color = vec3(
       abs(hue * 6.0 - 3.0) - 1.0,
@@ -1022,6 +1022,9 @@ const gridShaderSource = `
       2.0 - abs(hue * 6.0 - 4.0)
     );
     color = clamp(color, 0.0, 1.0);
+
+    // Darken the colors to create dark shades
+    color *= 0.3;
 
     // Apply the dot pattern to the colors
     vec3 backgroundColor = vec3(0.0); // Black background
