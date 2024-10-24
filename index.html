@@ -1,104 +1,610 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A sausage and ball appreciation site - this shows up in search results">
-    <meta name="keywords" content="Sausages, Dachshund, Balls">
-    <meta name="author" content="Frankie">
-    <meta name="robots" content="index, follow">
-    <link rel="icon" href="media/sausage.png">
-    <link rel="stylesheet" href="main.css">
-    <title>Frankie the Long Haired Mini-Dachshund</title>
 
+<!DOCTYPE html>
+<html>
+<head>
+   
+  <style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: 'Arial', sans-serif;
+        background-color: transparent;
+      }
+    
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    
+    .content-wrapper {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      height: auto;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.0);
+      color: white;
+    }
+
+    .navbar {
+        display: flex;
+        gap: 30px;
+        padding: 15px 20px;
+        background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 8px;
+        margin: 10px auto; /* Changed margin to auto for horizontal centering */
+        justify-content: center; /* Centers items horizontally */
+        align-items: center; /* Centers items vertically */
+        max-width: fit-content; /* Makes the navbar only as wide as its content */
+    }
+    
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: 2px solid white;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .btn.active {
+      background-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 px rgba(255, 255, 255, 0.8);
+    }
+
+    .content-section {
+        display: none;
+        position: relative; /* Change from absolute to relative */
+        width: 100%;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+    .content-section.active {
+      display: block;
+      animation: fadeSlideIn 0.6s ease forwards;
+    }
+
+    .content-section.fade-out {
+      animation: fadeSlideOut 0.6s ease forwards;
+    }
+
+    @keyframes fadeSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeSlideOut {
+      0% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+    }
+
+    .content-blocks {
+      display: flex;
+      padding: 40px;
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .block {
+      flex: 1;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    .content-section.active .block {
+      animation: slideIn 0.6s ease forwards;
+    }
+
+    .content-section.active .block:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 24px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+      padding-bottom: 10px;
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    .content-section.active h2 {
+      animation: fadeDown 0.5s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    @keyframes fadeDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+      opacity: 0;
+    }
+
+    .content-section.active p {
+      animation: fadeIn 0.5s ease forwards;
+      animation-delay: 0.4s;
+    }
+
+    .content-section.active p:nth-child(3) {
+      animation-delay: 0.5s;
+    }
+
+    .content-section.active p:nth-child(4) {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* Sidebar styles */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 250px;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        padding: 20px 0;
+        transform: translateX(-250px);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+      }
+  
+      .sidebar.open {
+        transform: translateX(0);
+      }
+  
+      .menu-toggle {
+        position: fixed;
+        left: 20px;
+        top: 20px;
+        z-index: 1001;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+  
+      .menu-toggle:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+  
+      .menu-item {
+        padding: 15px 25px;
+        color: white;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+  
+      .sidebar.open .menu-item {
+        opacity: 1;
+        transform: translateX(0);
+      }
+  
+      .menu-item:nth-child(1) { animation: slideIn 0.3s ease forwards 0.1s; }
+      .menu-item:nth-child(2) { animation: slideIn 0.3s ease forwards 0.2s; }
+      .menu-item:nth-child(3) { animation: slideIn 0.3s ease forwards 0.3s; }
+      .menu-item:nth-child(4) { animation: slideIn 0.3s ease forwards 0.4s; }
+  
+      .menu-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        padding-left: 30px;
+      }
+  
+      .menu-item.active {
+        background: rgba(255, 255, 255, 0.15);
+        border-left: 4px solid #ffffff;
+      }
+  
+      .menu-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 15px;
+        opacity: 0.7;
+      }
+  
+      .menu-label {
+        font-size: 16px;
+        font-weight: 500;
+      }
+  
+      .sidebar-header {
+        padding: 20px 25px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 20px;
+        color: white;
+        opacity: 0;
+      }
+  
+      .sidebar.open .sidebar-header {
+        animation: fadeIn 0.5s ease forwards 0.3s;
+      }
+  
+      /* Adjust content wrapper for sidebar */
+      .content-wrapper {
+        transition: margin-left 0.3s ease;
+      }
+  
+      .content-wrapper.sidebar-open {
+        margin-left: 250px;
+      }
+  
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+  </style>
 </head>
 <body>
-    <div class="navbar">
-        <div><a href="#">Home</a></div>
-        <div><a href="#">About</a></div>
-        <div><a href="#">Contact</a></div>
-        <div><a href="http://www.longboyscout.com">Scout's page</a></div>
+  <canvas id="shader"></canvas>
+
+  <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+  
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h3>Navigation Menu</h3>
+    </div>
+    <a href="#" class="menu-item active" onclick="showContent('cicd')">
+      <img src="/api/placeholder/20/20" alt="CI/CD" class="menu-icon">
+      <span class="menu-label">CI/CD Pipeline</span>
+    </a>
+    <a href="#" class="menu-item" onclick="showContent('agile')">
+      <img src="/api/placeholder/20/20" alt="Agile" class="menu-icon">
+      <span class="menu-label">Agile Methodology</span>
+    </a>
+    <a href="#" class="menu-item" onclick="showContent('aws')">
+      <img src="/api/placeholder/20/20" alt="AWS" class="menu-icon">
+      <span class="menu-label">AWS Services</span>
+    </a>
+    <a href="#" class="menu-item" onclick="showContent('development')">
+      <img src="/api/placeholder/20/20" alt="Dev" class="menu-icon">
+      <span class="menu-label">Development</span>
+    </a>
+  </div>
+
+
+  <div class="content-wrapper">
+    <div class="button-container">
+      <button class="btn active" onclick="showContent('cicd')">CI/CD</button>
+      <button class="btn" onclick="showContent('agile')">Agile</button>
+      <button class="btn" onclick="showContent('aws')">AWS</button>
+      <button class="btn" onclick="showContent('development')">Development</button>
     </div>
 
-    <h1>Welcome</h1>
-    <h2>This site is intended to illustrate some of the basic HTML tags that you an use to build a front page to your CI/CD pipeline. For example, this passage uses a 'h2' tag, although heading tags by default will appear different sizes, the number (h1 - h6) should refer to importance.</h2>
-    <hr/>
-    <p id="hrtag"> I've used a 'hr' tag above to create a horizontal line, used to break up content. However, this text is within 'p' tags, for paragraph. 
+    <!-- Content sections remain the same as previous version -->
+    <div id="cicd" class="content-section active">
+      <div class="content-blocks">
+        <div class="block">
+          <h2>Continuous Integration</h2>
+          <p>Continuous Integration (CI) is a development practice where developers regularly merge their code changes into a central repository. Each integration is verified by an automated build and automated tests.</p>
+          <p>Key benefits of CI include:</p>
+          <p>• Early detection of integration issues<br>
+          • Automated testing and validation<br>
+          • Consistent build process<br>
+          • Reduced integration problems<br>
+          • Improved code quality</p>
+        </div>
+        <div class="block">
+          <h2>Continuous Deployment</h2>
+          <p>Continuous Deployment (CD) is a software release process that uses automated testing to validate if changes to a codebase are correct and stable for immediate autonomous deployment to a production environment.</p>
+          <p>CD advantages include:</p>
+          <p>• Faster time to market<br>
+          • Automated release process<br>
+          • Consistent deployment pipeline<br>
+          • Reduced deployment risks<br>
+          • Continuous feedback loop</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="agile" class="content-section">
+      <div class="content-blocks">
+        <div class="block">
+          <h2>Agile Methodology</h2>
+          <p>Agile is an iterative approach to project management and software development that helps teams deliver value to their customers faster and with fewer headaches.</p>
+          <p>Core Principles:</p>
+          <p>• Individual and team interactions<br>
+          • Working software over documentation<br>
+          • Customer collaboration<br>
+          • Responding to change</p>
+        </div>
+        <div class="block">
+          <h2>Scrum Framework</h2>
+          <p>Scrum is an agile project management framework that helps teams structure and manage their work through a set of values, principles, and practices.</p>
+          <p>Key Components:</p>
+          <p>• Sprint Planning<br>
+          • Daily Stand-ups<br>
+          • Sprint Review<br>
+          • Sprint Retrospective<br>
+          • Product Backlog</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="aws" class="content-section">
+      <div class="content-blocks">
+        <div class="block">
+          <h2>AWS Services</h2>
+          <p>Amazon Web Services (AWS) provides a broad set of products and services you can use as building blocks for your applications.</p>
+          <p>Popular Services:</p>
+          <p>• EC2 for compute<br>
+          • S3 for storage<br>
+          • RDS for databases<br>
+          • Lambda for serverless<br>
+          • CloudFront for content delivery</p>
+        </div>
+        <div class="block">
+          <h2>Cloud Benefits</h2>
+          <p>AWS Cloud provides numerous advantages for organizations of all sizes.</p>
+          <p>Key Benefits:</p>
+          <p>• Pay-as-you-go pricing<br>
+          • Global infrastructure<br>
+          • Scalability and flexibility<br>
+          • Security and compliance<br>
+          • Wide service integration</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="development" class="content-section">
+      <div class="content-blocks">
+        <div class="block">
+          <h2>Modern Development</h2>
+          <p>Modern software development encompasses various practices, tools, and methodologies to create efficient and scalable applications.</p>
+          <p>Key Practices:</p>
+          <p>• Version Control<br>
+          • Test-Driven Development<br>
+          • Code Review<br>
+          • Documentation<br>
+          • DevOps Integration</p>
+        </div>
+        <div class="block">
+          <h2>Best Practices</h2>
+          <p>Following development best practices ensures code quality and maintainability.</p>
+          <p>Important Aspects:</p>
+          <p>• Clean Code Principles<br>
+          • Design Patterns<br>
+          • Security First Approach<br>
+          • Performance Optimization<br>
+          • Continuous Learning</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+ // Add this function before your existing JavaScript
+ function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const contentWrapper = document.querySelector('.content-wrapper');
+    sidebar.classList.toggle('open');
+    contentWrapper.classList.toggle('sidebar-open');
+    
+    // Update active menu item
+    document.querySelectorAll('.menu-item').forEach(item => {
+      item.classList.remove('active');
+      if(item.getAttribute('onclick').includes(currentSection)) {
+        item.classList.add('active');
+      }
+    });
+  }
+
+    function showContent(contentId) {
+      // Get current active section
+      const currentSection = document.querySelector('.content-section.active');
+      
+      // Get new section to show
+      const newSection = document.getElementById(contentId);
+      
+      if (currentSection === newSection) return;
+
+      // Remove active class from all buttons
+      document.querySelectorAll('.btn').forEach(button => {
+        button.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('active');
+        if(item.getAttribute('onclick').includes(contentId)) {
+          item.classList.add('active');
+        }
+      });
+
+      // Add active class to clicked button
+      event.target.classList.add('active');
+
+      // Add fade-out class to current section
+      if (currentSection) {
+        currentSection.classList.add('fade-out');
+        setTimeout(() => {
+          currentSection.classList.remove('active', 'fade-out');
+          // Show new section
+          newSection.classList.add('active');
+        }, 300);
+      } else {
+        newSection.classList.add('active');
+      }
+    }
+
+    // Shader code remains the same as previous version
+    const canvas = document.getElementById('shader');
+    const gl = canvas.getContext('webgl');
+
+    const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vertexShader, `
+      attribute vec2 position;
+      void main() {
+        gl_Position = vec4(position, 0.0, 1.0);
+      }
+    `);
+    gl.compileShader(vertexShader);
+
+    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(fragmentShader, `
+      precision mediump float;
+      uniform float time;
+      uniform vec2 resolution;
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / resolution;
+        float t = time * 0.5;
         
-    We don't have numbered paragraphs like headings, but we will learn how to individually identify our different p's in order to apply styles to them.</p>
+        float r = sin(uv.x * 3.0 + t) * 0.5 + 0.5;
+        float g = cos(uv.y * 4.0 - t) * 0.5 + 0.5;
+        float b = sin((uv.x + uv.y) * 5.0 + t) * 0.5 + 0.5;
+        
+        gl_FragColor = vec4(r, g, b, 1.0);
+      }
+    `);
+    gl.compileShader(fragmentShader);
 
-    <p>Originally all of our style info was applied through html tags, so we can use <b>bold</b> and <i>italics</i> with just 'b' and 'i' tags, also change the appearance of your text with <sub>subscript</sub> or <sup>superscript</sup> using 'sub' and 'sup' tags respectively</p>
+    const program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
 
-    <p>It looks like this:</p>
-    <img src="media/htmlpexample.JPG" alt="A sample of html code" width="600px">
-    <br>
-    <a href="https://en.wikipedia.org/wiki/Dachshund">Another very common tag is 'a', which requires a 'href' attribute to provide the target URL, and is used to create links like this one.</a>
-    <br>
-    <a href="https://en.wikipedia.org/wiki/Dachshund" target="blank">This one opens in a new tab.</a>
-    
-    <p>We can use many other html tags to structure our content; Use 'ul' to create an <i>unordered list</i> i.e. bulllet points, or 'ol' for an ordered list.</p>
-    <div style="font-size: small;">
-        <h3>Frankie's favourite foods:</h3>
-        <ul>
-            <li>Sausages</li>
-            <li>Steak</li>
-            <li>Chicken</li>
-            <li>Ice Cream</li>
-        </ul>
-        <h3>Frankie's favourite toys:</h3>
-        <ol>
-            <li>Ball</li>
-            <li>Ball</li>
-            <li>Ball</li>
-        </ol>
-    </div>
-    <p>Here's the code:</p>
-    <img src="/media/lists.JPG" alt="html for lists" width="200">
-    <p>It is also common to use html tables to lay out the elements of your page, in this example some images added with the 'img' tag, which also requires a 'src' and 'alt' parameters. <b>However</b>, this is not the best option for images, we'll see further down a better way.</p>
-    
-    <table class="frankietab">
-        <tr>
-            <td><img src="media/mates.jpg" alt="Frankie playing" width="250px"></td>
-            <td><img src="media/pickmeup.jpg" alt="Frankie wanting to be picked up" width="250px"></td>
-            <td><img src="media/icecream.jpg" alt="Frankie eating ice cream" height="250px"></td>
-        </tr>
-    </table>
-    
-    <video class="frankievid" width="480" height="640" controls>
-        <source src="media/wiggle.mp4" type="video/mp4">
-    </video>
+    const vertices = new Float32Array([
+      -1, -1,
+       1, -1,
+      -1,  1,
+       1,  1
+    ]);
 
-    <div>
-        <p>The last html tag you should know is 'div', this is doesn't show anything in the browser, but it is used to break your document into sections which can be handled or styled differently. The below CSS section is contained within 'div' tags, so I can manipulate it individually with style rules</p>
-    </div>
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
-    <p>To begin changing the look of the website with CSS we can add 'style' attributes directly to the html tags, known as <b>Inline</b> CSS; You can add your style to the head section of the html doc, known as <b>Internal</b> CSS; Or you can create a separate CSS file, known as <b>External</b> CSS. There are many style attributes which can be defined, including: color, background-color, alignment, font, borders, and many more... </p>
-    <p>When using Internal or External CSS instead of adding our style rules as attributes to our html tags, we instead right CSS rules which have their own syntax. There is a selector followed by declarations as Key Value Pairs in curley braces for example:</p> 
-    <br> 
-    <p>h1 {color:green; font-size:16px;}</p>
-    <br>
-    <p>When added between the head tags it looks like this:</p>
-    <img src="media/internalcss.JPG" alt="an exmaple of an internal style rule" width="300">
-   
+    const position = gl.getAttribLocation(program, 'position');
+    gl.enableVertexAttribArray(position);
+    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
 
-    <p class="rules">You might have spotted a problem with the CSS rules. What if we wanted to apply rules to individual elements, rather than all h1 elements, or all divs. To do this we assign a CSS class to our html tags, and then refer to those tags in our CSS rules declared in the head block. These images below show the div tags with classes, the CSS rules with class selectors, and the different output in the browser:</p>
-    
-    <div class="codepics">
-        <div><img src="media/cssclasses.JPG" alt="div tags with classes" width="300"></div>
-        <div><img src="media/cssclassrules.JPG" alt="css class selectors" width="300"></div>
-        <div><img src="media/cssclassbrowser.JPG" alt="the browser outputs" width="300"></div>
-    </div>
-    
-    <hr>
-    <br>
-    
-    <form id="orderForm" method="get" action="https://k6rohiot03.execute-api.eu-west-2.amazonaws.com/replaceFN">
-        <input type="text" name="first_name" placeholder="First Name">
-        <input type="text" name="last_name" placeholder="Last Name">
-        <input type="number" name="order_qty" placeholder="Order Quantity">
-        <button type="submit">Submit Order</button>
-    </form>
+    const timeLocation = gl.getUniformLocation(program, 'time');
+    const resolutionLocation = gl.getUniformLocation(program, 'resolution');
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function render(time) {
+      gl.useProgram(program);
+      gl.uniform1f(timeLocation, time * 0.001);
+      gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+  </script>
+
+  <div class="navbar">
+    <div><a href="#">Home</a></div>
+    <div><a href="#">About</a></div>
+    <div><a href="#">Contact</a></div>
+    <div><a href="#">Home</a></div>
+    <div><a href="#">About</a></div>
+    <div><a href="#">Contact</a></div>
+</div>
+
+
+<form id="orderForm" method="get" action="https://k6rohiot03.execute-api.eu-west-2.amazonaws.com/replaceFN">
+    <input type="text" name="first_name" placeholder="First Name">
+    <input type="text" name="last_name" placeholder="Last Name">
+    <input type="number" name="order_qty" placeholder="Order Quantity">
+    <button type="submit">Submit Order</button>
+</form>
 
 </body>
 </html>
+
+
+
