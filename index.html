@@ -849,6 +849,10 @@
           • Security First Approach<br>
           • Performance Optimization<br>
           • Continuous Learning</p>
+          <!-- 
+ <video class="frankievid" width="480" height="640" controls>
+  <source src="media/wiggle.mp4" type="video/mp4">
+ -->
         </div>
       </div>
       
@@ -981,14 +985,19 @@ const waveShaderSource = `
   uniform vec2 resolution;
 
   void main() {
-    vec2 uv = gl_FragCoord.xy / resolution;
-    float t = time * 0.5;
-
-    float r = sin(uv.x * 3.0 + t) * 0.5 + 0.5;
-    float g = cos(uv.y * 4.0 - t) * 0.5 + 0.5;
-    float b = sin((uv.x + uv.y) * 5.0 + t) * 0.5 + 0.5;
-
-    gl_FragColor = vec4(r, g, b, 1.0);
+      // Normalize coordinates and maintain aspect ratio
+      vec2 uv = gl_FragCoord.xy / resolution.xy;  // Changed to resolution.xy for proper normalization
+      float aspect = resolution.x / resolution.y;
+      uv.x *= aspect;
+      
+      float t = time * 0.5;
+      
+      // Adjust the wave frequencies to account for aspect ratio
+      float r = sin(uv.x * 3.0 / aspect + t) * 0.5 + 0.5;
+      float g = cos(uv.y * 4.0 - t) * 0.5 + 0.5;
+      float b = sin((uv.x / aspect + uv.y) * 5.0 + t) * 0.5 + 0.5;
+      
+      gl_FragColor = vec4(r, g, b, 1.0);
   }
 `;
 
@@ -1142,6 +1151,10 @@ requestAnimationFrame(render);
     <div><a href="#">About</a></div>
     <div><a href="#">Contact</a></div>
 </div>
+<!-- 
+ <video class="frankievid" width="480" height="640" controls>
+  <source src="media/wiggle.mp4" type="video/mp4">
+ -->
 
 
 <form id="orderForm" method="get" action="https://k6rohiot03.execute-api.eu-west-2.amazonaws.com/replaceFN">
