@@ -555,6 +555,20 @@
     font-size: 16px;
   }
  
+  .vid {
+    width: 100%; /* Makes video width match parent div */
+    height: auto; /* Maintains aspect ratio */
+    max-width: 100%; /* Ensures video doesn't overflow */
+    display: block; /* Removes any extra space below video */
+    margin: 20px 0; /* Optional: adds some spacing above/below */
+}
+
+/* If you want to limit the video size relative to the block */
+.block .vid {
+    max-width: 100%;
+    border-radius: 8px; /* Optional: matches your block style */
+}
+
   </style>
 </head>
 <body>
@@ -839,12 +853,13 @@
           • Code Review<br>
           • Documentation<br>
           • DevOps Integration</p>
-          <video class="frankievid" width="640" height="480" controls>
+          <video class="vid"  controls>
             <source src="media/compositor.mp4" type="video/mp4">
       </div>
 
 
     </div>
+    <div class="content-blocks">
     <div class="block">
       <h2>Best Practices</h2>
       <p>Following development best practices ensures code quality and maintainability.</p>
@@ -854,8 +869,11 @@
       • Security First Approach<br>
       • Performance Optimization<br>
       • Continuous Learning</p>
-       
 
+      <video class="vid"  controls>
+        <source src="media/retroLV1.mp4" type="video/mp4">
+       
+    </div>
     </div>
       
       <div class="content-blocks">
@@ -1153,10 +1171,7 @@ requestAnimationFrame(render);
     <div><a href="#">About</a></div>
     <div><a href="#">Contact</a></div>
 </div>
-<!-- 
- <video class="frankievid" width="480" height="640" controls>
-  <source src="media/wiggle.mp4" type="video/mp4">
- -->
+
 
 
 <form id="orderForm" method="get" action="https://k6rohiot03.execute-api.eu-west-2.amazonaws.com/replaceFN">
